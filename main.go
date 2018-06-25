@@ -46,23 +46,43 @@ func main() {
     }
   }
 
-
-  // Create the file to output solution 1.1 to. If the file exists already it will be overwritten.
-  file, err := os.Create("1.1.json")
+  // Marshal our list into a JSON object.
+  bytes, err := json.Marshal(startsWithJList)
   if err != nil {
     fmt.Println(err.Error())
     os.Exit(4)
   }
 
-  // Marshal our list into a JSON object.
-  bytes, err := json.Marshal(startsWithJList)
+  // Create the file to output solution 1.1 to. If the file exists already it will be overwritten.
+  file, err := os.Create("1.1.json")
   if err != nil {
     fmt.Println(err.Error())
     os.Exit(5)
   }
 
-  // Write the marshaled bytes to our file.
+  // Write the marshaled bytes to 1.1.json.
   writer := bufio.NewWriter(file)
+  writer.Write(bytes)
+  writer.Flush()
+
+  // Analyze the transformed data and marshal it into a JSON object.
+  analyzer := models.NewAnalyzer(transformedObjects)
+  analysis := analyzer.Analyze()
+  bytes, err = json.Marshal(analysis)
+  if err != nil {
+    fmt.Println(err.Error())
+    os.Exit(6)
+  }
+
+  // Create the file to output solution 1.2 to. If the file exists already it will be overwritten.
+  file, err = os.Create("1.2.json")
+  if err != nil {
+    fmt.Println(err.Error())
+    os.Exit(7)
+  }
+
+  // Write the marshaled bytes to 1.2.json.
+  writer = bufio.NewWriter(file)
   writer.Write(bytes)
   writer.Flush()
 }

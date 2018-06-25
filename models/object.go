@@ -8,11 +8,11 @@ import (
 
 type Object struct {
   FavoriteFruit string `json:"favoriteFruit"`
-  Posts []Post `json:"posts"`
-  Name Name `json:"name"`
-  Age int `json:"age"`
-  Balance string `json:"balance"`
-  Active bool `json:"isActive"`
+  Posts         []Post `json:"posts"`
+  Name          Name   `json:"name"`
+  Age           int    `json:"age"`
+  Balance       string `json:"balance"`
+  Active        bool   `json:"isActive"`
 }
 
 func (o *Object) Transform() *TransformedObject {
@@ -35,34 +35,18 @@ func (o *Object) Transform() *TransformedObject {
     }
   }
 
-  // Find the most appearances for a single word.
-  max := 0
-  for _, count := range wordCount {
-    if count > max {
-      max = count
-    }
-  }
-
-  // Create a list of the words with the most appearances.
-  var mostCommonWords []string
-  for word, count := range wordCount {
-    if count == max {
-      mostCommonWords = append(mostCommonWords, word)
-    }
-  }
-
   // Errors resulting from parsing the float value are ignored here. If an error occurs the default float value of 0
   // will be used.
   balance, _ := strconv.ParseFloat(strings.Replace(o.Balance[1:], ",", "", -1), 64)
 
   return &TransformedObject{
-    FullName: o.Name.fullName(),
-    PostCount: len(o.Posts),
-    MostCommonWords: mostCommonWords,
-    Age: o.Age,
-    Active: o.Active,
-    FavoriteFruit: o.FavoriteFruit,
-    Balance: balance,
+    FullName:        o.Name.fullName(),
+    PostCount:       len(o.Posts),
+    MostCommonWords: findMostCommon(wordCount),
+    Age:             o.Age,
+    Active:          o.Active,
+    FavoriteFruit:   o.FavoriteFruit,
+    Balance:         balance,
   }
 }
 
@@ -72,7 +56,7 @@ type Post struct {
 
 type Name struct {
   First string `json:"first"`
-  Last string `json:"last"`
+  Last  string `json:"last"`
 }
 
 func (n *Name) fullName() string {
@@ -80,11 +64,11 @@ func (n *Name) fullName() string {
 }
 
 type TransformedObject struct {
-  FullName string `json:"full_name"`
-  PostCount int `json:"post_count"`
+  FullName        string   `json:"full_name"`
+  PostCount       int      `json:"post_count"`
   MostCommonWords []string `json:"most_common_word_in_posts"`
-  Age int `json:"age"`
-  Active bool `json:"is_active"`
-  FavoriteFruit string `json:"favorite_fruit"`
-  Balance float64 `json:"balance"`
+  Age             int      `json:"age"`
+  Active          bool     `json:"is_active"`
+  FavoriteFruit   string   `json:"favorite_fruit"`
+  Balance         float64  `json:"balance"`
 }
